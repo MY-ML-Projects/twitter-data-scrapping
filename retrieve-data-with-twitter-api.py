@@ -31,16 +31,15 @@ client = tweepy.Client(
 
 search_query = "#covid19 -in:retweets has:geo"
 
-# query to search for tweets
+# Query to search for tweets
 query = '#covid19 lang:en -is:retweet (place_country:US "and" (place:Florida OR place:"Panama city" OR place:Tallahassee OR place:Jacksonville))'
-
 
 # Your start and end time for fetching tweets from march 1, 2022 to june 1, 2022
 start_time = "2022-03-01T00:00:00Z"
 end_time = "2022-06-01T23:59:59Z"
 
 
-# get tweets from the API 
+# Get tweets from the API 
 tweets = client.search_all_tweets(query=query,
                                      start_time=start_time,
                                      end_time=end_time,
@@ -50,28 +49,28 @@ tweets = client.search_all_tweets(query=query,
                                      expansions='author_id'
                                      )
 
-# tweet specific info
+# Tweet specific info
 print(len(tweets.data))
-# user specific info
+# User specific info
 print(len(tweets.includes["users"]))
 
-# first tweet
+# First tweet
 first_tweet = tweets.data[0]
 dict(first_tweet)
 
 
-## user information for the first tweet
+## User information for the first tweet
 first_tweet_user = tweets.includes["users"][0]
 dict(first_tweet_user)
 
 
 
 
-## import the pandas library
+## Import the pandas library
 import pandas as pd
-# create a list of records
+# Create a list of records
 tweet_info_ls = []
-# iterate over each tweet and corresponding user details
+# Iterate over each tweet and corresponding user details
 for tweet, user in zip(tweets.data, tweets.includes['users']):
     tweet_info = {
         'created_at': tweet.created_at,
@@ -84,7 +83,11 @@ for tweet, user in zip(tweets.data, tweets.includes['users']):
         'description': user.description
     }
     tweet_info_ls.append(tweet_info)
-# create dataframe from the extracted records
+# Create dataframe from the extracted records
 tweets_df = pd.DataFrame(tweet_info_ls)
-# display the dataframe
+
+# Clean up remaing non Florida tweets
+tweets_df = tweets_df[tweets_df['location'].str.contains("Fl|FL|Florida|FLORIDA", na = False)].reset_index(drop=True)
+
+# Display the dataframe
 tweets_df.head()
