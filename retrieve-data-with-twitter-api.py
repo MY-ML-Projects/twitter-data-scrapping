@@ -29,10 +29,11 @@ client = tweepy.Client(
 )
 
 
-search_query = "#covid19 -in:retweets"
+search_query = "#covid19 -in:retweets has:geo"
 
 # query to search for tweets
-query = "#covid19 lang:en -is:retweet"
+query = '#covid19 lang:en -is:retweet (place_country:US "and" (place:Florida OR place:"Panama city" OR place:Tallahassee OR place:Jacksonville))'
+
 
 # Your start and end time for fetching tweets from march 1, 2022 to june 1, 2022
 start_time = "2022-03-01T00:00:00Z"
@@ -45,7 +46,7 @@ tweets = client.search_all_tweets(query=query,
                                      end_time=end_time,
                                      tweet_fields = ["created_at", "text", "source"],
                                      user_fields = ["name", "username", "location", "verified", "description"],
-                                     max_results = 100,
+                                     max_results = 500,
                                      expansions='author_id'
                                      )
 
