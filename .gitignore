@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+twitter_authentication.py
 build/
 develop-eggs/
 dist/
